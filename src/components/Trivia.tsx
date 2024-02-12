@@ -10,7 +10,7 @@ function Trivia({ category, question, options, answer }) {
 
   function handleClick(option) {
     setFlipped(!flipped);
-    console.log(flipped);
+    console.log(!flipped);
     if (option === answer) {
       score += 1;
       console.log(score);
@@ -74,7 +74,8 @@ function Trivia({ category, question, options, answer }) {
       {flipped && (
         <div
           onClick={() => {
-            handleClick();
+            const option = -1;
+            handleClick(option);
           }}
           className="bottom"
         >

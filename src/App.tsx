@@ -1,6 +1,4 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
 import Trivia from "./components/Trivia";
@@ -182,26 +180,16 @@ function App() {
       <div className="cardContainer">
         {filteredTrivia.map((trivia) => {
           return (
-            <Trivia
-              key={trivia.category}
-              question={trivia.question}
-              options={trivia.options}
-              answer={trivia.answer}
-            />
+            <>
+              <Trivia
+                key={trivia.category}
+                question={trivia.question}
+                options={trivia.options}
+                answer={trivia.answer}
+              />
+            </>
           );
         })}
-
-        {/* {filteredTricks.map((trick) => {
-            return (
-              <Trick 
-                  key={trick.title}
-                  category={trick.category}
-                  title={trick.title}
-                  description={trick.description}/>
-            )
-          })}
-
-          <Trick category='Basic' title='Sit' description='Dog sits' /> */}
       </div>
     </div>
   );
