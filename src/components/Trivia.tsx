@@ -7,11 +7,10 @@ function Trivia({ question, options, answer, tally, setTally }) {
   const [flipped, setFlipped] = useState(false);
   // const [count, setCount] = useState(0);
 
-  console.log("Flipped", flipped, tally);
   function handleClick(option) {
     //Flip Card if correct and tally point
     //else flip card
-    console.log(option);
+    // console.log(option);
     if (option === answer && flipped === false) {
       // setCount(count + 1);
       setTally(tally + 1);
@@ -22,7 +21,7 @@ function Trivia({ question, options, answer, tally, setTally }) {
   }
   return (
     // Front of Card
-    <div className="card">
+    <div className="triviaCard">
       {/* Card Front   */}
       {!flipped && (
         <>

@@ -5,9 +5,11 @@ import Trivia from "./components/Trivia";
 import GameCategory from "./components/GameCategory";
 import Timer from "./components/Timer";
 import allTrivia from "./utils/data.js";
+import CategorySelection from "./components/CategorySelection.js";
+import { allCategories } from "./components/CategorySelection.js";
 
 // Array of Categories
-const allCategories = ["All", "The Office", "Friends", "Ted Lasso"];
+// const allCategories = ["All", "The Office", "Friends", "Ted Lasso"];
 
 // Dictonary of All trivia questions
 // const allTrivia = [
@@ -321,90 +323,77 @@ const allCategories = ["All", "The Office", "Friends", "Ted Lasso"];
 // ];
 
 function App() {
+  const [active, isActive] = useState(false);
   const [filteredTrivia, setFilteredTrivia] = useState(allTrivia);
   const [categoryHeader, setCategoryHeader] = useState("All");
   const [tally, setTally] = useState(0);
+
   console.log(tally);
   // handleClick in Nav for category selection
   const handleClick = (category) => {
     // filtering trivia cards based on nav selection
     // also setting category header
-    if (category === "All") {
-      setFilteredTrivia(allTrivia);
-      setCategoryHeader(allCategories[0]);
-    } else {
-      const setHeader = category;
-      const setTrivia = allTrivia.filter(
-        (trivia) => trivia.category === category
-      );
-      //return filtered Trivia
-      setFilteredTrivia(setTrivia);
-      setCategoryHeader(setHeader);
-      console.log("Header =", setHeader);
+    if (active === false) {
+      isActive(!active);
+
+      if (category === "All") {
+        setFilteredTrivia(allTrivia);
+        setCategoryHeader(allCategories[0]);
+      } else {
+        const setHeader = category;
+        const setTrivia = allTrivia.filter(
+          (trivia) => trivia.category === category
+        );
+        //return filtered Trivia
+        setFilteredTrivia(setTrivia);
+        setCategoryHeader(setHeader);
+        // console.log("Header =", setHeader);
+      }
     }
   };
-  // let gameHeader = "";
-  // const handleCategory = (category) => {
-  //   gameHeader = category;
-  //   return gameHeader;
+
   // };
   return (
     <>
       <div className="background-img">
         <div className="main-nav">
           <div className="page-header">
-            <h1>Speed Trivia</h1>
+            {/* <h1>Speed Trivia</h1> */}
+            <img
+              className="logo"
+              src="src/assets/speed-trivia-high-resolution-logo-transparent (1).png"
+            ></img>
           </div>
         </div>
         <div className="body">
-          <h3>Click a category below to begin!</h3>
-          <div>
-            {allCategories.map((category) => {
+          {active ? (
+            <GameCategory
+              gameHeader={categoryHeader}
+              score={tally}
+              active={active}
+              isActive={isActive}
+              tally={tally}
+              setTally={setTally}
+            />
+          ) : (
+            <CategorySelection handleClick={handleClick} />
+          )}
+        </div>
+
+        <div className="cardContainer">
+          {active &&
+            filteredTrivia.map((trivia, i) => {
               return (
-                <button
-                  key={category}
-                  onClick={() => {
-                    handleClick(category);
-                    // handleClick and handleCategory
-                  }}
-                  className="navButton btn btn-light"
-                >
-                  {category}
-                </button>
+                <Trivia
+                  key={i}
+                  question={trivia.question}
+                  options={trivia.options}
+                  answer={trivia.answer}
+                  tally={tally}
+                  setTally={setTally}
+                />
               );
             })}
-          </div>
-        </div>
-        <div className="mainNav scoreBoard">
-          {/* Game Category Header */}
-          <GameCategory
-            gameHeader={categoryHeader}
-            score={tally}
-          ></GameCategory>
-          <Timer />
-
-          {/* <div>
-            <h3>Score: 0</h3>
-          </div> */}
-        </div>
-        <div className="cardContainer">
-          {filteredTrivia.map((trivia, i) => {
-            return (
-              <Trivia
-                key={i}
-                question={trivia.question}
-                options={trivia.options}
-                answer={trivia.answer}
-                tally={tally}
-                setTally={setTally}
-                // onClick={() => {
-                //   setTally(tally + 1);
-                //   console.log(tally);
-                //   // scoreOne(option);
-                // }}
-              />
-            );
-          })}
         </div>
       </div>
     </>

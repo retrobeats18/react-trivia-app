@@ -2,14 +2,24 @@ import React from "react";
 import Countdown from "react-countdown";
 
 // future game timer function
-function Timer() {
-  //const renderer =
-  return (
-    <div>
-      <button className="btn btn-light multi">Reset</button>
-      <Countdown date={Date.now() + 60000} />
-    </div>
-  );
+function Timer({ active, isActive, tally, setTally }) {
+  // handle reset on button click, pass that value up to parent and restart game
+  const handleReset = () => {
+    if (active === true) {
+      isActive(!active);
+      setTally(0);
+    }
+  };
+  if (active === true) {
+    return (
+      <>
+        <button onClick={handleReset} className="btn btn-light multi">
+          Reset
+        </button>
+        <Countdown date={Date.now() + 10000} />
+      </>
+    );
+  }
 }
 
 export default Timer;
