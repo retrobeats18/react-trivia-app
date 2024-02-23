@@ -1,12 +1,11 @@
 import { useState } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
-import Trivia from "./components/Trivia";
-import GameCategory from "./components/GameCategory";
-import Timer from "./components/Timer";
+import Trivia from "./Trivia.js";
+import GameCategory from "./GameCategory.js";
 import allTrivia from "./utils/data.js";
-import CategorySelection from "./components/CategorySelection.js";
-import { allCategories } from "./components/CategorySelection.js";
+import CategorySelection from "./CategorySelection.js";
+import { allCategories } from "./CategorySelection.js";
 
 // Array of Categories
 // const allCategories = ["All", "The Office", "Friends", "Ted Lasso"];
@@ -323,12 +322,19 @@ import { allCategories } from "./components/CategorySelection.js";
 // ];
 
 function App() {
+  // State to track if game is active
   const [active, isActive] = useState(false);
+  // State to filter set of trivia cards based on category selection
   const [filteredTrivia, setFilteredTrivia] = useState(allTrivia);
+  // State to set category header once category is selected
   const [categoryHeader, setCategoryHeader] = useState("All");
+  // State to keep tally of total answered correctly
   const [tally, setTally] = useState(0);
+  // State to track which card is being displayed
+  const [cardNumber, setCardNumber] = useState(0);
 
-  console.log(tally);
+  console.log("Current Tally", tally);
+  console.log("Card", cardNumber);
   // handleClick in Nav for category selection
   const handleClick = (category) => {
     // filtering trivia cards based on nav selection
@@ -351,8 +357,33 @@ function App() {
       }
     }
   };
+  // Map dictionary arry to Trivia Cards
+  const triviaCard = filteredTrivia.map((trivia, i) => (
+    <Trivia
+      key={i}
+      question={trivia.question}
+      options={trivia.options}
+      answer={trivia.answer}
+      tally={tally}
+      setTally={setTally}
+    />
+  ));
 
-  // };
+  const handleNext = () => {
+    setCardNumber(cardNumber + 1);
+  };
+  const handleBack = () => {
+    if (cardNumber != 0) {
+      setCardNumber(cardNumber - 1);
+    }
+  };
+  const handleReset = () => {
+    setCardNumber(0);
+    setTally(0);
+    isActive(false);
+  };
+
+  // Start Return of App
   return (
     <>
       <div className="background-img">
@@ -361,39 +392,44 @@ function App() {
             {/* <h1>Speed Trivia</h1> */}
             <img
               className="logo"
-              src="src/assets/speed-trivia-high-resolution-logo-transparent (1).png"
+              src="src/assets/speed-trivia-high-resolution-logo-transparent.png"
             ></img>
           </div>
         </div>
         <div className="body">
-          {active ? (
-            <GameCategory
-              gameHeader={categoryHeader}
-              score={tally}
-              active={active}
-              isActive={isActive}
-              tally={tally}
-              setTally={setTally}
-            />
-          ) : (
-            <CategorySelection handleClick={handleClick} />
+          {!active && <CategorySelection handleClick={handleClick} />}
+          {active && (
+            <>
+              <GameCategory
+                gameHeader={categoryHeader}
+                active={active}
+                isActive={isActive}
+                tally={tally}
+                setTally={setTally}
+                handleNext={handleNext}
+                handleBack={handleBack}
+                handleReset={handleReset}
+              />
+            </>
           )}
         </div>
 
         <div className="cardContainer">
-          {active &&
-            filteredTrivia.map((trivia, i) => {
-              return (
-                <Trivia
-                  key={i}
-                  question={trivia.question}
-                  options={trivia.options}
-                  answer={trivia.answer}
-                  tally={tally}
-                  setTally={setTally}
-                />
-              );
-            })}
+          {/* Display one individual Trivia card once category is selected*/}
+          {active && triviaCard[cardNumber]}
+
+          {/* // filteredTrivia.map((trivia, i) => {
+            //   return (
+            //     <Trivia
+            //       key={i}
+            //       question={trivia.question}
+            //       options={trivia.options}
+            //       answer={trivia.answer}
+            //       tally={tally}
+            //       setTally={setTally}
+            //     />
+            //   );
+            // })} */}
         </div>
       </div>
     </>
